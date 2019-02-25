@@ -1,0 +1,32 @@
+---
+# zerodowntime.selinux/defaults/main.yml
+
+# selinux__selinux_policy_version: string [present | latest]
+# (required) selinux-policy package state
+selinux__selinux_policy_version: present
+
+
+# selinux__mode
+# (required): name of the SELinux policy to use
+#     permissive - SELinux security policy is enforced.
+#     enforcing - SELinux prints warnings instead of enforcing.
+#     disabled - No SELinux policy is loaded.
+selinux__mode: enforcing
+
+
+# selinux__type: string
+# (required): Selinux policy
+#     targeted - Targeted processes are protected,
+#     minimum - Modification of targeted policy. Only selected processes are protected.
+#     mls - Multi Level Security protection.
+selinux__type: targeted
+
+
+# selinux__boolean: dict
+#    Toggles SELinux booleans (getsebool -a)
+#
+# example:
+#   selinux__boolean:
+#     virt_use_samba: true
+#     boinc_execmem: false
+selinux__boolean: {}

@@ -1,0 +1,50 @@
+---
+# zerodowntime.selinux/tasks/selinux.yml
+
+- name: 'selinux | Run selinux tasks on RedHat os family only'
+  become: true
+  block:
+
+    - name: 'selinux | set selinux policy'
+      selinux:
+        state: "{{ selinux__mode }}"
+        policy: "{{ selinux__type }}"
+      register: _selinux__status
+      tags:
+        - selinux
+        - selinux::policy
+
+
+    - name: 'selinux | set selinux runtime mode'
+      shell: "setenforce {% if selinux__mode in ['permissive','disabled'] %}permissive{% else %}enforcing{% endif %}"
+      when:
+        - ansible_selinux.status == 'enabled'
+        - ansible_selinux.mode != selinux__mode
+      tags:
+        - selinux
+        - selinux::policy
+
+
+    - name: 'selinux | updates policy'
+      package:
+        name: selinux-policy
+        state: "{{ selinux__selinux_policy_version }}"
+      when: selinux__mode in ['permissive','enforcing']
+      tags:
+        - selinux
+        - selinux::policy
+
+
+    - name: "selinux | set booleans"
+      seboolean:
+        name: "{{ item.key }}"
+        state: "{{ item.value|bool }}"
+        persistent: true
+      loop: "{{ selinux__boolean|dict2items }}"
+      when: ansible_selinux and ansible_selinux.status == 'enabled'
+      tags:
+        - selinux
+        - selinux::boolean
+
+  # END BLOCK
+  when: ansible_os_family == 'RedHat'

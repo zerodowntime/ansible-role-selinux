@@ -1,0 +1,11 @@
+---
+
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - role: zerodowntime.selinux
+      selinux__mode: enforcing
+      selinux__type: targeted
+      selinux__boolean:
+        httpd_can_network_connect: true

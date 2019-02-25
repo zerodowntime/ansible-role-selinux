@@ -1,0 +1,25 @@
+---
+# zerodowntime.selinux/meta/main.yml
+
+galaxy_info:
+  role_name: selinux
+  author: ZeroDowntime
+  company: ZeroDowntime Sp. z o.o.
+  license: Apache License 2.0
+  description: Ansible role to install and configure selinux module
+
+  min_ansible_version: 2.5
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+  galaxy_tags:
+    - system
+    - selinux
+
+
+dependencies:
+  - role: zerodowntime.selinux_python
+    tags:
+      - selinux
